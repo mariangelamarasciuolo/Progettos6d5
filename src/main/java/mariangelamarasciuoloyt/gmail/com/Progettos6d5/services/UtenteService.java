@@ -1,5 +1,7 @@
 package mariangelamarasciuoloyt.gmail.com.Progettos6d5.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import mariangelamarasciuoloyt.gmail.com.Progettos6d5.entities.Utente;
 import mariangelamarasciuoloyt.gmail.com.Progettos6d5.exceptions.BadRequestException;
 import mariangelamarasciuoloyt.gmail.com.Progettos6d5.exceptions.NotFoundException;
@@ -10,8 +12,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
+@Service
 public class UtenteService {
+    @Autowired
+    private Cloudinary cloudinary;
     @Autowired
     private UtenteRepository utenteRepository;
 
@@ -20,7 +29,7 @@ public class UtenteService {
             throw new BadRequestException("L'email " + user.getEmail() + " è già utilizzata!");
         });
         Utente newUtente = new Utente();
-        if (body.avatar().equals("")) {
+        if (body.avatar() == null) {
             newUtente.setAvatar("http://ui-avatars.com/api/?name=" + body.name() + "+" + body.surname());
         } else {
             newUtente.setAvatar(body.avatar());
@@ -28,6 +37,7 @@ public class UtenteService {
 
         newUtente.setName(body.name());
         newUtente.setSurname(body.surname());
+        newUtente.setUsername(body.username());
         newUtente.setEmail(body.email());
 
         return utenteRepository.save(newUtente);
@@ -49,6 +59,7 @@ public class UtenteService {
         found.setId(id);
         found.setName(body.getName());
         found.setSurname(body.getSurname());
+        found.setUsername(body.getUsername());
         return found;
     }
 
@@ -56,4 +67,12 @@ public class UtenteService {
         Utente found = this.findById(id);
         utenteRepository.delete(found);
     }
+
+    public Utente uploadPicture(MultipartFile file, int id) throws IOException {
+        Utente found = this.findById(id);
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        found.setAvatar(url);
+        return utenteRepository.save(found);
+    }
+
 }

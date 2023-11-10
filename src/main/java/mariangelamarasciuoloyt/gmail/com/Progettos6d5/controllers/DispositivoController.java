@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@RestController
+@RequestMapping("/dispositivi")
 public class DispositivoController {
     @Autowired
     private DispositivoService dispositivoService;

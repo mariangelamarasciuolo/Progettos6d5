@@ -8,15 +8,17 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@Entity
 @Table(name = "dispositivi")
 public class Dispositivo {
-    @ManyToOne
-    @JoinColumn(name = "utente_id", nullable = false)
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String stato;
     private String tipo;
+
+    @ManyToOne
+    @JoinColumn(name = "utente_id", nullable = false)
     private Utente utente;
 }

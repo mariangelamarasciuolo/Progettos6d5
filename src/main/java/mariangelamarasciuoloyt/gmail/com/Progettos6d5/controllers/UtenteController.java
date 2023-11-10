@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/utenti")
@@ -49,4 +52,10 @@ public class UtenteController {
     public void findAndDeleteById(@PathVariable int id) {
         utenteService.findAndDeleteById(id);
     }
+
+    @PostMapping("/{id}/upload")
+    public Utente uploadAvatar(@RequestParam("avatar") MultipartFile body, @PathVariable int id) throws IOException {
+        return utenteService.uploadPicture(body, id);
+    }
 }
+

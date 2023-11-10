@@ -19,6 +19,6 @@ public class Dispositivo {
     private String tipo;
 
     @ManyToOne
-    @JoinColumn(name = "utente_id", nullable = false)
+    @JoinColumn(name = "utente_id")
     private Utente utente;
 }

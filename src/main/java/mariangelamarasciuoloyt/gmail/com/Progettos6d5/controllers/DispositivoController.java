@@ -4,6 +4,7 @@ import mariangelamarasciuoloyt.gmail.com.Progettos6d5.entities.Dispositivo;
 import mariangelamarasciuoloyt.gmail.com.Progettos6d5.payloads.DispositivoDTO;
 import mariangelamarasciuoloyt.gmail.com.Progettos6d5.services.DispositivoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -41,5 +42,10 @@ public class DispositivoController {
     @ResponseStatus(HttpStatus.NO_CONTENT) // <-- 204 NO CONTENT
     public void findAndDeleteById(@PathVariable int id) {
         dispositivoService.findAndDeleteById(id);
+    }
+
+    @PutMapping("/assign/device={deviceId}&user={userId}")
+    public void assignDevice(@PathVariable int dispositivoId, @PathVariable int utenteId) throws ChangeSetPersister.NotFoundException {
+        dispositivoService.AssignDipositivoToUtente(dispositivoId, utenteId);
     }
 }
